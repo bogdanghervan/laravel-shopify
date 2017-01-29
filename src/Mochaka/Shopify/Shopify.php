@@ -52,7 +52,9 @@ class Shopify
         }
         $r = $r->send();
 
-        if ($r->code !== 200) {
+        if (in_array($r->code, [200, 201])) {
+            return json_decode(json_encode($r->body), true);
+        } else {
             return [
                 'error' => $r->body,
                 'url' => $url,
@@ -60,8 +62,6 @@ class Shopify
                 'status' => $r->code,
                 'response' => $r->body
             ];
-        } else {
-            return json_decode(json_encode($r->body), true);
         }
 
     }
